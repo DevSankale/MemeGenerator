@@ -1,5 +1,4 @@
 import React from "react";
-import memesData from "./memesData";
 
 
 export default function Meme(){
@@ -9,15 +8,25 @@ const [meme,setMemeImage]=React.useState({
   bottomText:"",
   randomImage:"https://i.imgflip.com/1g8my4.jpg"
 });
-const [allMemeImages,setAllMemeImages]=React.useState(memesData);
+const [allMemeImages,setAllMemeImages]=React.useState([]);
+
+React.useEffect(()=>{
+  fetch("https://api.imgflip.com/get_memes") 
+  .then(res=>res.json())
+  .then(data=>setAllMemeImages(data.data.memes)),[]
+})
+
+
         function getMeme(){
                       
          let url;
                         
-         const memeArray = allMemeImages.data.memes;
-         const randomMeme = Math.floor(Math.random()*memeArray.length);
-         url = memeArray[randomMeme].url;
+         
+         const randomMeme = Math.floor(Math.random()*allMemeImages.length);
+         url = allMemeImages[randomMeme].url;
                           
+
+
           setMemeImage((prevMemeImage)=>{
            return   {
                 ...prevMemeImage,
@@ -26,8 +35,8 @@ const [allMemeImages,setAllMemeImages]=React.useState(memesData);
             
           });
         };
-      function handleChange(event){
-        setMemeImage((prevState)=>{
+        function handleChange(event){
+          setMemeImage((prevState)=>{
           return (
             {
               ...prevState,
@@ -37,7 +46,7 @@ const [allMemeImages,setAllMemeImages]=React.useState(memesData);
         })
       }
 
-      function handleSubmit(event){
+        function handleSubmit(event){
                 event.preventDefault()
       }
   return(
